@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 mufin.initLogger()
 mufin.scanBluetooth().then(() => {
     mufin.connectBluetooth("50:33:8B:2A:8D:3C").then(() => {
-        // mufin.bluetoothRead("50:33:8B:2A:8D:3C")
+        mufin.writeBluetooth("50:33:8B:2A:8D:3C", "off")
     })
 })
 
@@ -50,9 +50,9 @@ app.post("/clova", async (req, res) => {
     res.send(handleClova(req.body))
 })
 
-https.createServer({
-    key: fs.readFileSync(process.env.PRIVATE_KEY || "private_key.pem"),
-    cert: fs.readFileSync(process.env.CERTIFICATE || "certificate.pem")
-}, app).listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`)
-})
+// https.createServer({
+//     key: fs.readFileSync(process.env.PRIVATE_KEY || "private_key.pem"),
+//     cert: fs.readFileSync(process.env.CERTIFICATE || "certificate.pem")
+// }, app).listen(PORT, () => {
+//     console.log(`Server started on port ${PORT}`)
+// })
