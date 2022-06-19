@@ -15,13 +15,17 @@ app.use(bodyParser.json())
 mufin.initLogger()
 mufin.scanBluetooth().then(() => {
     mufin.connectBluetooth("50:33:8B:2A:8D:3C").then(() => {
-        mufin.writeBluetooth("50:33:8B:2A:8D:3C", "off")
+        
     })
 })
 
 class MyIntentListener extends IntentListener {
     @IntentHandler("LedService")
     onLedOn(_intentName: string, slots: any, response: ClovaResponse) {
+        if (!slots.hasOwnProperty("action")) {
+            response.continueSession({})
+        }
+        
         if (slots["action"].value == "true") {
             response.addSpeach("불이 켜졌습니다")
             mufin.writeBluetooth("50:33:8B:2A:8D:3C", "on")
@@ -50,9 +54,9 @@ app.post("/clova", async (req, res) => {
     res.send(handleClova(req.body))
 })
 
-// https.createServer({
-//     key: fs.readFileSync(process.env.PRIVATE_KEY || "private_key.pem"),
-//     cert: fs.readFileSync(process.env.CERTIFICATE || "certificate.pem")
-// }, app).listen(PORT, () => {
-//     console.log(`Server started on port ${PORT}`)
-// })
+https.createServer({
+    key: fs.readFileSync(process.env.PRIVATE_KEY || "private_key.pem"),
+    cert: fs.readFileSync(process.env.CERTIFICATE || "certificate.pem")
+}, app).listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`)
+})
